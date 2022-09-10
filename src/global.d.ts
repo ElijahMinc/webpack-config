@@ -14,10 +14,8 @@ declare module "*.css" {
   export default classNames
 }
 
-declare module "*.png" {
-  type IImgUrl = string
-
-  const urlImg: IImgUrl
-
-  export default urlImg
-}
+declare module "*.png"
+declare module "*.svg"
+declare module "*.jpeg"
+declare module "*.jpg"
+declare module "*.webp"

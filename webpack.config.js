@@ -1,8 +1,10 @@
 const HtmlWebpackPlugin = require("html-webpack-plugin")
 const MiniCssExtractPlugin = require("mini-css-extract-plugin")
 const TerserWebpackPlugin = require("terser-webpack-plugin")
+const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin")
 const FriendlyErrorsWebpackPlugin = require("@soda/friendly-errors-webpack-plugin")
 
+const PORT = 5000
 const path = require("path")
 
 let target = "web" // в режиме разработки browserslist не используется
@@ -25,8 +27,28 @@ const plugins = [
   new MiniCssExtractPlugin({
     filename: "css/[name].[contenthash].css", // Формат имени файла
   }),
-  new FriendlyErrorsWebpackPlugin(),
+  new FriendlyErrorsWebpackPlugin({
+    compilationSuccessInfo: {
+      messages: [`You application is running here http://localhost:${PORT}`],
+      // notes: ['Happy development ^^']
+    },
+    onErrors: function (severity, errors) {
+      // You can listen to errors transformed and prioritized by the plugin
+      // severity can be 'error' or 'warning'
+    },
+    // should the console be cleared between each compilation?
+    // default is true
+    clearConsole: true,
+
+    // add formatters and transformers (see below)
+    additionalFormatters: [],
+    additionalTransformers: [],
+  }),
 ] // Создаем массив плагинов
+
+if (!isProd) {
+  plugins.push(new ReactRefreshWebpackPlugin())
+}
 
 const optimize = () => {
   const config = {
@@ -56,11 +78,11 @@ const aliases = () => ({
   "@components": path.resolve(__dirname, "src", "components"),
 })
 
-const babelPresets = (preset) => {
-  const presets = ["@babel/preset-env"]
+const babelPresets = (...listPresets) => {
+  const presets = ["@babel/preset-env", "@babel/preset-react"]
 
-  if (preset) {
-    presets.push(preset)
+  if (!!presets.length) {
+    listPresets.forEach((preset) => presets.push(preset))
   }
 
   return presets
@@ -90,26 +112,30 @@ module.exports = {
     clean: true,
     chunkFilename: "[id].[chunkhash].js",
   },
-
+  infrastructureLogging: {
+    level: "error",
+    colors: true,
+    console: "HELLLLOOOOO",
+  },
   devServer: {
     hot: true,
     open: true,
-    port: 5000,
+    port: PORT,
+    allowedHosts: "all",
     historyApiFallback: true, // не прыгай
     // quiet: true, //Не отображать информацию консоли devServer, FriendlyErrorsWebpackPlugin заменит ее
     client: {
+      progress: false,
+      logging: "error",
       overlay: {
         errors: true,
-        warnings: false,
+        warnings: true,
       },
-      // overlay: {
-      //   errors: true,
-      //   warnings: false,
-      // },
     },
   },
+  stats: "errors-warnings",
   resolve: {
-    extensions: [".ts", ".js"],
+    extensions: [".ts", ".js", ".tsx", ".jsx"],
     alias: aliases(),
   },
   module: {

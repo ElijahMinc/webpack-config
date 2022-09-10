@@ -14,6 +14,14 @@
     "paths": {
       "@/*": ["./src/*"],
       "@components/*": ["./src/components/*"]
-    }
+    },
+    "plugins": [
+      {
+        "name": "typescript-plugin-css-modules"
+      },
+      {
+        "name": "typescript-tslint-plugins"
+      }
+    ]
   }
 }
