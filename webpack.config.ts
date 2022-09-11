@@ -1,8 +1,9 @@
+// import * as path from "path"
+
 const HtmlWebpackPlugin = require("html-webpack-plugin")
 const MiniCssExtractPlugin = require("mini-css-extract-plugin")
 const TerserWebpackPlugin = require("terser-webpack-plugin")
 const FriendlyErrorsWebpackPlugin = require("@soda/friendly-errors-webpack-plugin")
-
 const path = require("path")
 
 let target = "web" // в режиме разработки browserslist не используется
@@ -46,7 +47,7 @@ const optimize = () => {
   }
 
   if (isProd) {
-    config.minimizer = [new TerserWebpackPlugin()]
+    ;(config as any).minimizer = [new TerserWebpackPlugin()]
   }
   return config
 }
@@ -56,7 +57,7 @@ const aliases = () => ({
   "@components": path.resolve(__dirname, "src", "components"),
 })
 
-const babelPresets = (preset) => {
+const babelPresets = (preset: string) => {
   const presets = ["@babel/preset-env"]
 
   if (preset) {
@@ -71,7 +72,7 @@ console.log("isProd", isProd)
 
 // ==================== /LOGGER ==========================
 
-module.exports = {
+const config = {
   mode,
   plugins,
   target,
@@ -155,3 +156,5 @@ module.exports = {
     ],
   },
 }
+
+export default config
