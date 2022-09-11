@@ -3,9 +3,9 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin")
 const TerserWebpackPlugin = require("terser-webpack-plugin")
 const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin")
 const FriendlyErrorsWebpackPlugin = require("@soda/friendly-errors-webpack-plugin")
+const path = require("path")
 
 const PORT = 5000
-const path = require("path")
 
 let target = "web" // в режиме разработки browserslist не используется
 let mode = "development"
@@ -32,7 +32,7 @@ const plugins = [
       messages: [`You application is running here http://localhost:${PORT}`],
       // notes: ['Happy development ^^']
     },
-    onErrors: function (severity, errors) {
+    onErrors: function (severity: any, errors: any) {
       // You can listen to errors transformed and prioritized by the plugin
       // severity can be 'error' or 'warning'
     },
@@ -68,7 +68,7 @@ const optimize = () => {
   }
 
   if (isProd) {
-    config.minimizer = [new TerserWebpackPlugin()]
+    (config as any).minimizer = [new TerserWebpackPlugin()]
   }
   return config
 }
@@ -78,7 +78,7 @@ const aliases = () => ({
   "@components": path.resolve(__dirname, "src", "components"),
 })
 
-const babelPresets = (...listPresets) => {
+const babelPresets = (...listPresets: any[]) => {
   const presets = ["@babel/preset-env", "@babel/preset-react"]
 
   if (!!presets.length) {

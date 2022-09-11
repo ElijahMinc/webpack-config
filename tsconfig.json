@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
-    "module": "es6",
-    "target": "es2015",
+    "module": "CommonJS",
+    "target": "ES2016",
     "lib": ["dom", "dom.iterable", "esnext"],
     "strict": true,
     "noImplicitAny": true,
